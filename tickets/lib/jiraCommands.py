@@ -110,7 +110,7 @@ class Jira:
         resp = self.auth.getRequest("issuetype")
         return resp
 
-    def setIssueTypeIds(self, issueTypes = dict(story = "", bug = "", task="")):
+    def setIssueTypeIds(self, issueTypes = dict(story = "", bug = "")):
         allIssueTypes = self.getAllIssueTypesForUser()
 
         for item in allIssueTypes:
