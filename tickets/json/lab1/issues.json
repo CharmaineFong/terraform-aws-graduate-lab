@@ -1,0 +1,326 @@
+[
+  {
+    "storyid": "1",
+    "name": "Create Backend State w/ Bootstrap Script",
+    "description": {
+      "taskDescription": "As an engineer, I want to deploy a S3 bucket to store the state files for my Terraform Infrastructure",
+      "acceptanceCriteria": [
+        "Run bootstrap script to deploy state bucket in eu-west-2",
+        "Set lab_name variable to grad-lab-1",
+        "Backend state updated for each layer with state_bucket_name",
+        "Successful init with terraform init command"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/8",
+          "hrefText": "feature/backend-state"
+        },
+        {
+          "title": "IaC Terraform AWS Backend State:",
+          "href": "https://airview.airwalkconsulting.io/knowledge/terraform_aws_backend_state_li2zif10/_index.md",
+          "hrefText": "IaC Terraform AWS Backend State"
+        },
+        {
+          "title": "IaC Terraform Style Guide:",
+          "href": "https://airview.airwalkconsulting.io/knowledge/terraform_style_guide/_index.md",
+          "hrefText": "IaC Terraform Style Guide"
+        },
+        {
+          "title": "IaC Branching Strategy:",
+          "href": "https://airview.airwalkconsulting.io/knowledge/infrastructure_as_code_lhynoxvg/_index.md",
+          "hrefText": "IaC Branching Strategy"
+        },
+        {
+          "title": "IaC Code Review:",
+          "href": "https://airview.airwalkconsulting.io/knowledge/code_review_li5t4xvr/_index.md",
+          "hrefText": "IaC Code Review"
+        }
+      ]
+    },
+    "type": "story"
+  },
+  {
+    "storyid": "2",
+    "name": "Configure Required Default Tags",
+    "description": {
+      "taskDescription": "As an engineer, I want to set common default tags to deployed resources to reduce tagging on individual resources",
+      "acceptanceCriteria": [
+        "Project required default tags applied under AWS provider"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/9",
+          "hrefText": "feature/default-tags"
+        },
+        {
+          "title": "Default Tagging",
+          "href": "https://www.hashicorp.com/blog/default-tags-in-the-terraform-aws-provider",
+          "hrefText": "Default Tags in the Terraform AWS Provider"
+        }
+      ]
+    },
+    "type": "story"
+  },
+  {
+    "storyid": "3",
+    "name": "Deploy VPC",
+    "description": {
+      "taskDescription": "As an engineer, I want to deploy a VPC so I can host my cloud infrastructure",
+      "acceptanceCriteria": [
+        "TF Code added to base layer vpc.tf",
+        "VPC deployed with Terraform Module detailed under Useful Links",
+        "VPC configured with CIDR Range 10.0.0.0/16",
+        "Public & Private Subnets in all available AZs",
+        "All subnets configured with equal number of IPs with maximum number per subnet",
+        "NAT Gateway enabled according to requirements",
+        "VPC Deployed to eu-west-2 region"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/10",
+          "hrefText": "feature/deploy-vpc"
+        },
+        {
+          "title": "Terraform VPC Module",
+          "href": "https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/5.1.2",
+          "hrefText": "Terraform Registry"
+        },
+        {
+          "title": "Terraform CIDR Subnet Function",
+          "href": "https://developer.hashicorp.com/terraform/language/functions/cidrsubnet",
+          "hrefText": "functions-cidrsubnet"
+        },
+        {
+          "title": "Subnet Calculator",
+          "href": "https://www.site24x7.com/tools/ipv4-subnetcalculator.html",
+          "hrefText": "ipv4-subnetcalculator"
+        }
+      ]
+    },
+    "type": "story"
+  },
+  {
+    "storyid": "4",
+    "name": "Deploy Application Load Balancer",
+    "description": {
+      "taskDescription": "As an engineer, I want to deploy an Application Load Balancer so I can manage traffic between my web servers",
+      "acceptanceCriteria": [
+        "TF Code added to app layer alb.tf",
+        "Deploy using AWS ALB Terraform module",
+        "Deployed in all public subnets",
+        "Open ingress on http/https ports and open egress on all ports",
+        "Configure health checks on port 80 to manage ASG instances",
+        "Add listener on port 80",
+        "Output ALB DNS name in terraform to provide easy access to website URL.",
+        "Deployed to eu-west-2 region"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/11",
+          "hrefText": "feature/deploy-application-lb"
+        },
+        {
+          "title": "Terraform ALB Module:",
+          "href": "https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest",
+          "hrefText": "terraform-aws-modules/alb/aws/latest"
+        },
+        {
+          "title": "Terraform VPC Data Source",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc",
+          "hrefText": "aws/latest/docs/data-sources/vpc"
+        },
+        {
+          "title": "Terraform Subnets Data Source",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets",
+          "hrefText": "aws/latest/docs/data-sources/subnets"
+        },
+        {
+          "title": "Using Terraform Data Source Filters",
+          "href": "https://discuss.hashicorp.com/t/the-use-of-the-filter-in-data-sources/34848",
+          "hrefText": "the-use-of-the-filter-in-data-sources"
+        }
+      ]
+    },
+    "type": "story",
+    "link": [
+      {
+        "type": "depends on",
+        "idtolink": "3"
+      }
+    ]
+  },
+  {
+    "storyid": "5",
+    "name": "Deploy S3 Bucket to store website files",
+    "description": {
+      "taskDescription": "As an engineer, I want to deploy a S3 Bucket to store my website files so I can copy them across to my EC2 instances and install them as part of the user data",
+      "acceptanceCriteria": [
+        "TF Code added to base layer s3.tf",
+        "Deploy using AWS S3 Terraform module",
+        "Versioning enabled",
+        "Deployed to eu-west-2 region"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/12",
+          "hrefText": "feature/webfiles-s3-bucket"
+        },
+        {
+          "title": "Terraform S3 Module",
+          "href": "https://registry.terraform.io/modules/terraform-aws-modules/s3-bucket/aws/3.15.1?utm_content=documentLink&utm_medium=Visual+Studio+Code&utm_source=terraform-ls",
+          "hrefText": "modules/terraform-aws-modules/s3-bucket"
+        }
+      ]
+    },
+    "type": "story"
+  },
+  {
+    "storyid": "6",
+    "name": "Upload website files to S3 Bucket",
+    "description": {
+      "taskDescription": "As an engineer, I want to upload my website files to an S3 bucket as part of my terraform deployment so I can copy them across to my EC2 Web Servers",
+      "acceptanceCriteria": [
+        "TF Code added to app layer s3.tf",
+        "src folder copied from ~/src/lab1 to app layer",
+        "Upload index.html to root of S3 Bucket (no key path/folders)"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/13",
+          "hrefText": "feature/s3-file-upload"
+        },
+        {
+          "title": "Terraform S3 Object Resource",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object",
+          "hrefText": "aws/latest/docs/resources/s3_object"
+        }
+      ]
+    },
+    "type": "story",
+    "link": [
+      {
+        "type": "depends on",
+        "idtolink": "5"
+      }
+    ]
+  },
+  {
+    "storyid": "7",
+    "name": "Create EC2 Instance Profile",
+    "description": {
+      "taskDescription": "As an engineer, I want to create an EC2 Instance Profile to use on my web servers so I can copy files across from an S3 Bucket",
+      "acceptanceCriteria": [
+        "TF Code added to app layer iam.tf",
+        "IAM Policy restricts access to only S3 Bucket hosting web server files",
+        "IAM Policy restricted to S3 Actions that permit copying files to EC2 only"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/14",
+          "hrefText": "feature/ec2-instance-profile"
+        },
+        {
+          "title": "Terraform IAM Role Resource",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role",
+          "hrefText": "aws/latest/docs/resources/iam_role"
+        },
+        {
+          "title": "Terraform Instance Profile Resource",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile",
+          "hrefText": "aws/latest/docs/resources/iam_instance_profile"
+        }
+      ]
+    },
+    "type": "story"
+  },
+  {
+    "storyid": "8",
+    "name": "Configure VPC Endpoint Access to S3",
+    "description": {
+      "taskDescription": "As an engineer, I want to configure a S3 Gateway endpoint so my EC2 Instances can access S3 directly from my VPC",
+      "acceptanceCriteria": [
+        "Add tf code inside base layer vpc.tf",
+        "Deploy using Terraform AWS VPC submodule vpc-endpoints",
+        "Configure with private_route_table_ids",
+        "Endpoint type = Gateway"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/15",
+          "hrefText": "feature/s3-vpc-endpoint"
+        },
+        {
+          "title": "Terraform VPC Endpoint Module",
+          "href": "https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/5.1.2/submodules/vpc-endpoints",
+          "hrefText": "vpc/aws/5.1.2/submodules/vpc-endpoints"
+        }
+      ]
+    },
+    "type": "story",
+    "link": [
+      {
+        "type": "depends on",
+        "idtolink": "3"
+      }
+    ]
+  },
+  {
+    "storyid": "9",
+    "name": "Create Auto Scaling Group",
+    "description": {
+      "taskDescription": "As an engineer, I want to deploy an autoscaling group to manage the number of web servers used by my application",
+      "acceptanceCriteria": [
+        "TF Code added to app layer asg.tf",
+        "image_id obtained by using data source to retrieve latest AMI ID",
+        "src folder copied from ~/src/lab1 to app layer",
+        "Launch Template configured to use user data script ec2WebUserData.tftpl",
+        "ASG Configuration matches lab requirements"
+      ],
+      "usefulLinks": [
+        {
+          "title": "Solution PR:",
+          "href": "https://github.com/AirWalk-Digital/terraform-aws-graduate-lab-solutions/pull/16",
+          "hrefText": "feature/autoscaling-group"
+        },
+        {
+          "title": "Terraform Launch Template Resource",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template",
+          "hrefText": "aws/latest/docs/resources/launch_template"
+        },
+        {
+          "title": "Udemy Terraform AMI Data Source Example (Course purchase required): ",
+          "href": "https://www.udemy.com/course/terraformcertified/learn/lecture/23722582#overview",
+          "hrefText": "udemy.com/course/terraformcertified/learn"
+        },
+        {
+          "title": "Terraform ASG Resource",
+          "href": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group",
+          "hrefText": "aws/latest/docs/resources/autoscaling_group"
+        }
+      ]
+    },
+    "type": "story",
+    "link": [
+      {
+        "type": "depends on",
+        "idtolink": "3"
+      },
+      {
+        "type": "depends on",
+        "idtolink": "4"
+      },
+      {
+        "type": "depends on",
+        "idtolink": "8"
+      }
+    ]
+  }
+]
