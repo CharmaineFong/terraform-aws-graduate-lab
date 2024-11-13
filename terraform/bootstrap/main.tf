@@ -3,11 +3,20 @@
 # for terraform state storage!
 ################################################################################
 
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0" # or a specific version compatible with your setup
+    }
+  }
+}
+
 variable "aws_region" {
   default = "eu-west-2"
 }
 
-variable "lab_name" {}
+variable "grad-lab-1" {}
 
 output "state_bucket_name" {
   value = local.state_bucket_name
@@ -23,7 +32,7 @@ locals {
   state_bucket_name = join("-", [
     data.aws_caller_identity.current.account_id,
     var.aws_region,
-    var.lab_name,
+    var.grad-lab-1,
     "tf",
     "state"
   ])

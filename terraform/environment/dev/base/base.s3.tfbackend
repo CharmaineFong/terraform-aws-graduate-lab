@@ -1,5 +1,5 @@
-bucket         = 
+bucket         = "225483615251-eu-west-2-lab1-tf-state"
 key            = "state/dev/base/terraform.tfstate"
 region         = "eu-west-2"
 encrypt        = true
-dynamodb_table = 
+dynamodb_table = "225483615251-eu-west-2-lab1-tf-state"
