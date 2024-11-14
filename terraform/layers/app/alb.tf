@@ -1,8 +1,16 @@
+data "aws_vpc" "selected" {
+  id = var.vpc_id
+}
+
+data "aws_subnets" "public" {
+  id = var.vpc_id
+}
+
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
 
   name    = "${var.project_name}-${var.environment}-alb"
-  vpc_id  = "vpc-02a04198101a22299"
+  vpc_id  = data.aws_vpc.selected.id
   subnets = ["subnet-0c7c5592845f6edde", "subnet-0331e9b782ff751b4", "subnet-024fed966a44fae4e"]
 
   # Security Group
@@ -25,12 +33,13 @@ module "alb" {
   security_group_egress_rules = {
     all = {
       ip_protocol = "-1"
+      description = "Allow egress for all ports"
       cidr_ipv4   = "0.0.0.0/0"
     }
   }
 
   access_logs = {
-    bucket = "my-alb-logs"
+    bucket = "${var.project_name}-${var.environment}-alb-logs"
   }
 
   listeners = {
@@ -64,8 +73,4 @@ module "alb" {
     }
   }
 
-  tags = {
-    Environment = "Development"
-    Project     = "Example"
-  }
 }
