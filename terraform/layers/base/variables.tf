@@ -2,6 +2,7 @@
 variable "environment" {
   description = "Define environment to deploy resources in"
   type        = string
+  default     = "dev"
 }
 
 variable "project_name" {
@@ -13,4 +14,9 @@ variable "owner" {
   description = "Owner of deployed resource"
   type        = string
   default     = "Andy"
+}
+
+variable "vpc_cidr_range" {
+  description = "CIDR range for VPC"
+  type        = string
 }
