@@ -23,3 +23,12 @@ provider "aws" {
     }
   }
 }
+
+
+# declare local variables - global throughout layer  
+# the reason why this variable is in the providers.tf is becayse 
+# the data block referencing it in vpc.tf is calling an external resource (aws provider in this case) 
+# to retrieve availability zones information
+locals {
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
+}
