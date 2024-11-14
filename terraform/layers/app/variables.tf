@@ -2,6 +2,7 @@
 variable "environment" {
   description = "Define environment to deploy resources in"
   type        = string
+  default     = "dev"
 }
 
 variable "project_name" {
