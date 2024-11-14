@@ -3,11 +3,11 @@ terraform {
 
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
+      version = ">= 5.46.0" # or a specific version compatible with your setup
     }
   }
 }
-
 # 1. Set common default tags to deployed resources
 # use variables defined in terraform.tfvars to allow for dynamic tagging
 # 2. Specify region to be used across all tf files
