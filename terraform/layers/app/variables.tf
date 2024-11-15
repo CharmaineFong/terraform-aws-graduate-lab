@@ -15,8 +15,3 @@ variable "owner" {
   type        = string
   default     = "Andy"
 }
-
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
