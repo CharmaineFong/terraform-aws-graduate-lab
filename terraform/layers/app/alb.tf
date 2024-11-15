@@ -1,18 +1,34 @@
-data "aws_vpc" "selected" {
-  id = var.vpc_id
+# target vpc - filter by name tag
+data "aws_vpc" "grad_lab_1_vpc" {
+  filter {
+    name   = "tag:Name"
+    values = ["${var.project_name}-${var.environment}-vpc"] # insert values here
+  }
 }
 
-data "aws_subnets" "public" {
-  id = var.vpc_id
+# target public subnets - filter by vpc id and subnet name tag
+data "aws_subnet" "grad_lab_1_public_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.grad_lab_1_vpc.id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["${var.project_name}-${var.environment}-vpc-public-*"]
+  }
 }
 
+# provision alb
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
 
-  name    = "${var.project_name}-${var.environment}-alb"
-  vpc_id  = data.aws_vpc.selected.id
-  subnets = ["subnet-0c7c5592845f6edde", "subnet-0331e9b782ff751b4", "subnet-024fed966a44fae4e"]
+  name = "${var.project_name}-${var.environment}-alb"
 
+  vpc_id  = data.aws_vpc.grad-lab-1-vpc.id
+  subnets = data.aws_subnet.grad_lab_1_public_subnets.ids
+
+  create_security_group = false
   # Security Group
   security_group_ingress_rules = {
     all_http = {
