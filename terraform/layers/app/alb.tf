@@ -72,9 +72,10 @@ module "alb" {
       health_check = {
         path                = "/"
         port                = 80
-        matcher             = "200"
-        interval            = 120
-        unhealthy_threshold = 5
+        matcher             = "299"
+        interval            = 180
+        unhealthy_threshold = 4
+        healthy_threshold   = 4
       }
     }
   ]
