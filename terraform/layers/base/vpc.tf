@@ -17,3 +17,24 @@ module "vpc" {
   single_nat_gateway = var.environment == "dev" ? true : false
 
 }
+
+# configure a S3 Gateway endpoint so my EC2 Instances can access S3 directly from my VPC
+# Configure with private_route_table_ids
+# Endpoint type = Gateway
+module "endpoints" {
+  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+
+  vpc_id = module.vpc.vpc_id
+
+  endpoints = {
+    s3 = {
+      # interface endpoint
+      service         = "s3"
+      service_type    = "Gateway"
+      route_table_ids = module.vpc.private_route_table_ids
+      tags = {
+        Name = "${var.project_name}-${var.environment}-s3-vpc-endpoint"
+      }
+    },
+  }
+}
