@@ -88,26 +88,35 @@ resource "aws_security_group" "grad_lab_1_asg_sg" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "asg_allow_HTTPS_ingress_traffic" {
-  security_group_id = aws_security_group.grad_lab_1_asg_sg.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 443
-  ip_protocol = "tcp"
-  to_port     = 443
+  security_group_id            = aws_security_group.grad_lab_1_asg_sg.id
+  referenced_security_group_id = module.alb.security_group_id
+  from_port                    = 443
+  ip_protocol                  = "tcp"
+  to_port                      = 443
 }
 
 resource "aws_vpc_security_group_ingress_rule" "asg_allow_HTTP_ingress_traffic" {
-  security_group_id = aws_security_group.grad_lab_1_asg_sg.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 80
-  ip_protocol = "tcp"
-  to_port     = 80
+  security_group_id            = aws_security_group.grad_lab_1_asg_sg.id
+  referenced_security_group_id = module.alb.security_group_id
+  from_port                    = 80
+  ip_protocol                  = "tcp"
+  to_port                      = 80
 }
 
-resource "aws_vpc_security_group_egress_rule" "asg_allow_all_egress_traffic" {
+resource "aws_vpc_security_group_egress_rule" "asg_allow_s3_endpoint_egress_traffic" {
   security_group_id = aws_security_group.grad_lab_1_asg_sg.id
+  # points to group of S3 gatway endpoint IP addresses
+  prefix_list_id = aws_vpc_endpoint.s3_gateway_endpoint.prefix_list_id
+  ip_protocol    = "-1"
+}
 
-  cidr_ipv4   = "0.0.0.0/0"
-  ip_protocol = "-1"
+# ------------------------- vpc - aws s3 gateway endpoint
+resource "aws_vpc_endpoint" "s3_gateway_endpoint" {
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_id            = data.aws_vpc.grad_lab_1_vpc.id
+  vpc_endpoint_type = "Gateway"
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-vpc-endpoint-s3"
+  }
 }

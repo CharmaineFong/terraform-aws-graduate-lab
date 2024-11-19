@@ -38,3 +38,9 @@ variable "ec2_web_instance_type" {
   description = "the instance type to deploy EC2 with ASG"
   type        = string
 }
+
+variable "region" {
+  description = "Region to deploy resources in"
+  type        = string
+  default     = "eu-west-2"
+}
