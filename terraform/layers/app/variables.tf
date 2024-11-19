@@ -33,3 +33,8 @@ variable "asg_desired_capacity" {
   type        = number
   default     = 2
 }
+
+variable "ec2_web_instance_type" {
+  description = "the instance type to deploy EC2 with ASG"
+  type        = string
+}

@@ -22,9 +22,10 @@ data "aws_ami" "latest_linux_2_AMI" {
 
 # Launch Template configured to use user data script ec2WebUserData.tftpl
 resource "aws_launch_template" "grad_lab_1_asg_launch_temp" {
-  name          = "${var.project_name}-${var.environment}-instance-launch-template"
-  image_id      = data.aws_ami.latest_linux_2_AMI.image_id
-  instance_type = "t2.micro"
+  name                   = "${var.project_name}-${var.environment}-instance-launch-template"
+  image_id               = data.aws_ami.latest_linux_2_AMI.image_id
+  instance_type          = var.ec2_web_instance_type
+  vpc_security_group_ids = [aws_security_group.grad_lab_1_asg_sg.id]
 
   iam_instance_profile {
     name = aws_iam_instance_profile.EC2_instance_profile.name
@@ -32,7 +33,7 @@ resource "aws_launch_template" "grad_lab_1_asg_launch_temp" {
 
   user_data = base64encode(templatefile("./src/ec2WebUserData.tftpl"),
     {
-      bucket_name = "${var.project_name}-${var.environment}-website-files"
+      bucket_name = data.aws_s3_bucket.grad_lab_1_webstie_files_bucket.name
   })
 }
 
@@ -74,4 +75,39 @@ resource "aws_autoscaling_group" "grad_lab_1_asg" {
     id      = aws_launch_template.grad_lab_1_asg_launch_temp.id
     version = "$Latest"
   }
+}
+
+
+# ------------------------- Security Group for ASG
+
+# create Security group for ASG
+resource "aws_security_group" "grad_lab_1_asg_sg" {
+  name        = "${var.project_name}-${var.environment}-asg-sg"
+  description = "Security group for asg"
+  vpc_id      = data.aws_vpc.grad_lab_1_vpc.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "asg_allow_HTTPS_ingress_traffic" {
+  security_group_id = aws_security_group.grad_lab_1_asg_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 443
+  ip_protocol = "tcp"
+  to_port     = 443
+}
+
+resource "aws_vpc_security_group_ingress_rule" "asg_allow_HTTP_ingress_traffic" {
+  security_group_id = aws_security_group.grad_lab_1_asg_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 80
+  ip_protocol = "tcp"
+  to_port     = 80
+}
+
+resource "aws_vpc_security_group_egress_rule" "asg_allow_all_egress_traffic" {
+  security_group_id = aws_security_group.grad_lab_1_asg_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
 }
