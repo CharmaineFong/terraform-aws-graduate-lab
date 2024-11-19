@@ -15,3 +15,21 @@ variable "owner" {
   type        = string
   default     = "Andy"
 }
+
+variable "asg_min_size" {
+  description = "min number of instance scaled in by ASG"
+  type        = number
+  default     = 2
+}
+
+variable "asg_max_size" {
+  description = "max number of instance scaled out by ASG"
+  type        = number
+  default     = 5
+}
+
+variable "asg_desired_capacity" {
+  description = "desired number of instance to run by ASG"
+  type        = number
+  default     = 2
+}
