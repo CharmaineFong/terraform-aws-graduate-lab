@@ -25,7 +25,7 @@ variable "asg_min_size" {
 variable "asg_max_size" {
   description = "max number of instance scaled out by ASG"
   type        = number
-  default     = 5
+  default     = 3
 }
 
 variable "asg_desired_capacity" {
