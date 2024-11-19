@@ -35,8 +35,9 @@ resource "aws_iam_role_policy" "s3_to_ec2_policy" {
           "s3:ListBucket"
         ],
         Resource = [
-          "arn:aws:s3:::${var.project_name}-${var.environment}-ec2-website-files",
-          "arn:aws:s3:::${var.project_name}-${var.environment}-ec2-website-files/*"
+          # reference data block directly from s3.tf to fetch s3 arn
+          data.aws_s3_bucket.grad_lab_1_webstie_files_bucket.arn,
+          "${data.aws_s3_bucket.grad_lab_1_webstie_files_bucket.arn}/*"
         ]
       }
     ]
